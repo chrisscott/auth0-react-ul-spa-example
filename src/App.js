@@ -26,8 +26,7 @@ const params = Object.assign({
 
 const webAuth = new auth0.WebAuth(params);
 
-// const databaseConnection = 'Username-Password-Authentication';
-const databaseConnection = 'consumer-users';
+const databaseConnection = 'Username-Password-Authentication';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
