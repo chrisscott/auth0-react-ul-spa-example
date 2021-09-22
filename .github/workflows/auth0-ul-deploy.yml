@@ -1,0 +1,47 @@
+name: Deploy Auth0 Universal Login SPA
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy-to-s3:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [15.x]
+
+    env:
+      PUBLIC_URL: ${{ secrets.PUBLIC_URL }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run build --if-present
+
+      - uses: shallwefootball/s3-upload-action@master
+        name: Upload to S3
+        id: S3
+        with:
+          aws_key_id: ${{ secrets.AWS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_bucket: ${{ secrets.AWS_BUCKET }}
+          source_dir: ./build
+          destination_dir: ""
+
+      - uses: chrisscott/auth0-deploy-action@main
+        name: Deploy to Auth0
+        with:
+          input: ./tenant.yml
+          format: yaml
+          deploy_command: deploy
+        env:
+          AUTH0_DOMAIN: ${{ secrets.AUTH0_DOMAIN }}
+          AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
+          AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
