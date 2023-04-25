@@ -1,3 +1,7 @@
+# *** ARCHIVED: This project was archived on April 25, 2023 ***
+
+I built this when I was working at Auth0 back when there weren't many examples of using a SPA in UL. Since I'm no longer there and there hasn't been any use or feedback on this project, I'm archiving it today and will likely delete in the future.
+
 # Auth0 Universal Login SPA Example
 
 ## Overview
